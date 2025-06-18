@@ -4,41 +4,58 @@ public class BioskopApp {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        // Data film dan jadwal
-        Film film1 = new Film("Final Destination: Bloodlines", "Horror", 109);
-        Film film2 = new Film("Interstellar", "Adventure", 169);
-        Film film3 = new Film("Jumbo", "Family", 102);
-        String[] jam1 = {"12:00", "15:00", "18:00"};
-        String[] jam2 = {"13:00", "16:00", "19:00"};
+        // Daftar film dengan harga
+        Film[] daftarFilm = {
+            new Film("Interstellar", "Adventure", 169, 50000),
+            new Film("Avengers: Endgame", "Superhero", 181, 60000),
+            new Film("La La Land", "Musical", 128, 48000),
+            new Film("Jumbo", "Animation", 105, 42000),
+            new Film("Joker", "Drama", 122, 47000)
+        };
 
-        Jadwal jadwal1 = new Jadwal(film1, jam1);
-        Jadwal jadwal2 = new Jadwal(film2, jam2);
+        // Jadwal
+        Jadwal[] daftarJadwal = new Jadwal[10];
+        String[][] semuaJam = {
+            {"12:00", "15:00", "18:00"},
+            {"11:30", "14:30", "17:30"},
+            {"09:00", "12:00", "15:00"},
+            {"13:15", "16:15", "19:15"},
+            {"15:00", "18:00", "21:00"}
+        };
+
+        for (int i = 0; i < daftarFilm.length; i++) {
+            daftarJadwal[i] = new Jadwal(daftarFilm[i], semuaJam[i]);
+        }
 
         TempatDuduk tempatDuduk = new TempatDuduk();
 
-        // Input nama user
+        // Input user
         System.out.print("Masukkan nama Anda: ");
         String nama = input.nextLine();
-        User user = new User(nama, tempatDuduk);
+
+        System.out.print("Apakah Anda VIP? (y/n): ");
+        String vipInput = input.nextLine();
+        boolean isVip = vipInput.equalsIgnoreCase("y");
+
+        User user = new User(nama, isVip, tempatDuduk);
 
         // Pilih film
         System.out.println("\n=== Daftar Film ===");
-        System.out.println("1. " + film1.getJudul());
-        System.out.println("2. " + film2.getJudul());
-        System.out.println("3. " + film3.getJudul());
-        System.out.print("Pilih nomor film: ");
-        int pilihFilm = input.nextInt();
-
-        Film filmDipilih;
-        Jadwal jadwalDipilih;
-
-        if (pilihFilm == 1) {
-            filmDipilih = film1;
-            jadwalDipilih = jadwal1;
-        } else {
-            filmDipilih = film2;
-            jadwalDipilih = jadwal2;
+        for (int i = 0; i < daftarFilm.length; i++) {
+            System.out.printf("%d. %s (Rp%.0f)\n", i + 1, daftarFilm[i].getJudul(), daftarFilm[i].getHarga());
         }
+
+        System.out.print("Pilih nomor film (1-10): ");
+        int pilihFilm = input.nextInt();
+        input.nextLine();
+
+        if (pilihFilm < 1 || pilihFilm > daftarFilm.length) {
+            System.out.println("Pilihan tidak valid.");
+            return;
+        }
+
+        Film filmDipilih = daftarFilm[pilihFilm - 1];
+        Jadwal jadwalDipilih = daftarJadwal[pilihFilm - 1];
 
         System.out.println("\nJadwal Tayang:");
         String[] jamTayang = jadwalDipilih.getJamTayang();
@@ -48,21 +65,23 @@ public class BioskopApp {
 
         System.out.print("Pilih nomor jam tayang: ");
         int pilihJam = input.nextInt();
+        input.nextLine();
+
+        if (pilihJam < 1 || pilihJam > jamTayang.length) {
+            System.out.println("Pilihan jam tidak valid.");
+            return;
+        }
+
         String jamDipilih = jamTayang[pilihJam - 1];
 
-        // Tampilkan kursi tersedia
+        // Tampilkan dan pilih kursi
         tempatDuduk.tampilKursi();
-
         System.out.print("Pilih nomor kursi (0-9): ");
         int nomorKursi = input.nextInt();
 
-        // Proses pemesanan tiket
         user.pesanTiket(filmDipilih, jamDipilih, nomorKursi);
 
-        // Tampilkan kursi setelah pemesanan
         System.out.println("\nKondisi Kursi Sekarang:");
         tempatDuduk.tampilKursi();
-
-        input.close();
     }
 }
