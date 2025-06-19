@@ -14,7 +14,7 @@ public class BioskopApp {
         };
 
         // Jadwal
-        Jadwal[] daftarJadwal = new Jadwal[10];
+        Jadwal[] daftarJadwal = new Jadwal[5];
         String[][] semuaJam = {
             {"12:00", "15:00", "18:00"},
             {"11:30", "14:30", "17:30"},
@@ -45,7 +45,7 @@ public class BioskopApp {
             System.out.printf("%d. %s (Rp%.0f)\n", i + 1, daftarFilm[i].getJudul(), daftarFilm[i].getHarga());
         }
 
-        System.out.print("Pilih nomor film (1-10): ");
+        System.out.print("Pilih nomor film (1-5): ");
         int pilihFilm = input.nextInt();
         input.nextLine();
 
